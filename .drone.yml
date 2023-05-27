@@ -20,7 +20,7 @@ steps:
   - name: checkout tag
     image: alpine/git
     commands:
-      - cd unraid-kind
+      - cd kind
       - git fetch --all --tags
       - git checkout tags/${DRONE_TAG}
     depends_on:
@@ -44,17 +44,17 @@ steps:
     image: vbatts/slackware:14.2
     commands:
       - mkdir -p dist/usr/sbin
-      - cp bat/target/x86_64-unknown-linux-gnu/release/bat ./dist/usr/sbin/bat
+      - cp kind/bin/kind ./dist/usr/sbin/kind
       - cp -R ./usr ./dist
-      - chmod +x ./dist/usr/sbin/bat
+      - chmod +x ./dist/usr/sbin/kind
       - cd dist
-      - makepkg -l y -c y ../unraid-bat-${DRONE_TAG}.txz
+      - makepkg -l y -c y ../unraid-kind-${DRONE_TAG}.txz
     depends_on:
       - "verify"
   - name: prepare release
     image: vbatts/slackware:14.2
     commands:
-      - echo "bat ${DRONE_TAG} - built@$(date '+%FT%TZ') [Drone ${DRONE_SYSTEM_VERSION}]" > ./release_note
+      - echo "kind ${DRONE_TAG} - built@$(date '+%FT%TZ') [Drone ${DRONE_SYSTEM_VERSION}]" > ./release_note
       - cat ./release_note
     depends_on:
       - "build slackware package"
@@ -65,7 +65,7 @@ steps:
         from_secret: GITEA_KEY
       base_url: https://git.panaetius.co.uk
       files:
-        - ./unraid-bat-${DRONE_TAG}.txz
+        - ./unraid-kind-${DRONE_TAG}.txz
       checksum:
         - md5
       title: ${DRONE_TAG}
@@ -81,7 +81,7 @@ steps:
       api_key:
         from_secret: GITHUB_KEY
       files:
-        - ./unraid-bat-${DRONE_TAG}.txz
+        - ./unraid-kind-${DRONE_TAG}.txz
       checksum:
         - md5
       title: ${DRONE_TAG}
