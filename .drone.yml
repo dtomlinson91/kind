@@ -34,7 +34,7 @@ steps:
     depends_on:
       - "checkout tag"
   - name: verify
-    image: rust:latest
+    image: golang:latest
     commands:
       - message=$(/drone/src/unraid-kind/kind/bin/kind | head -n 1)
       - if test $message != "kind creates and manages local Kubernetes clusters using Docker container 'nodes'"; then exit 1; fi
