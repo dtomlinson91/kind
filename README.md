@@ -2,7 +2,7 @@
 
 This is the repository for the unraid kind plugin.
 
-<img src="https://git.panaetius.co.uk/dtomlinson91/unraid-bat/raw/branch/main/assets/unraid-bat.svg"/>
+<img src="https://git.panaetius.co.uk/dtomlinson91/unraid-kind/raw/branch/main/assets/unraid-kind.png" width="300px" />
 
 ## description
 
