@@ -17,6 +17,7 @@ steps:
     image: alpine/git
     commands:
       - git submodule update --init --recursive
+
   - name: checkout tag
     image: alpine/git
     commands:
@@ -25,6 +26,7 @@ steps:
       - git checkout tags/${DRONE_TAG}
     depends_on:
       - "checkout submodule"
+
   - name: go build
     image: golang:latest
     commands:
@@ -33,13 +35,14 @@ steps:
       - cd bin
     depends_on:
       - "checkout tag"
+
   - name: verify
-    image: golang:latest
+    image: vbatts/slackware:14.2
     commands:
-      - message=$(/drone/src/unraid-kind/kind/bin/kind | head -n 1)
-      - if test $message != "kind creates and manages local Kubernetes clusters using Docker container 'nodes'"; then exit 1; fi
+      - bash -c "if [[ \"$(kind/bin/kind | head -n 1)\" != \"kind creates and manages local Kubernetes clusters using Docker container 'nodes'\" ]]; then exit 1; fi"
     depends_on:
       - "go build"
+
   - name: build slackware package
     image: vbatts/slackware:14.2
     commands:
@@ -51,6 +54,7 @@ steps:
       - makepkg -l y -c y ../unraid-kind-${DRONE_TAG}.txz
     depends_on:
       - "verify"
+
   - name: prepare release
     image: vbatts/slackware:14.2
     commands:
@@ -58,6 +62,7 @@ steps:
       - cat ./release_note
     depends_on:
       - "build slackware package"
+
   - name: publish gitea release
     image: plugins/gitea-release
     settings:
@@ -75,6 +80,7 @@ steps:
         event: tag
     depends_on:
       - "prepare release"
+
   - name: publish github release
     image: plugins/github-release@sha256:24f5fb388173c0ec211d1c73d2c4441efd3cd24d0ba9eea148b98c40d03807ff
     settings:
@@ -91,6 +97,7 @@ steps:
         event: tag
     depends_on:
       - "prepare release"
+
   - name: slack
     image: plugins/slack
     settings:
