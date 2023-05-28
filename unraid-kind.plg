@@ -74,12 +74,6 @@ upgradepkg --install-new &plugin;/&name;-&version;.txz
 <INLINE>
 **kind**
 
-This is the repository for the unraid kind plugin.
-
-<img src="https://git.panaetius.co.uk/dtomlinson91/unraid-kind/raw/branch/main/assets/unraid-kind.png" width="300px" />
-
-## description
-
 kind is a tool for running local Kubernetes clusters using Docker container “nodes”.
 kind was primarily designed for testing Kubernetes itself, but may be used for local development or CI.
 
